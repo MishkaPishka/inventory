@@ -54,20 +54,6 @@ public class InventoryService {
                 .orElseThrow(() -> new ItemNotFoundException(id));
     }
 
-//    @PutMapping("/items/{id}")
-//    Item replaceEmployee(@RequestBody Item newEmployee, @PathVariable Long id) {
-//
-//        return repository.findById(id)
-//                .map(employee -> {
-//                    employee.setName(newEmployee.getName());
-//                    employee.setRole(newEmployee.getRole());
-//                    return repository.save(employee);
-//                })
-//                .orElseGet(() -> {
-//                    newEmployee.setId(id);
-//                    return repository.save(newEmployee);
-//                });
-//    }
 
 
 
