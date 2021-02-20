@@ -56,14 +56,6 @@ public class ItemController {
     Item changeQuantity(@RequestParam long itemId, @RequestParam int quantity) throws InvalidQuantityChangeException {
         return inventoryService.changeQuantity(itemId,quantity);
         //TODO
-//        return repository.findById(itemId)
-//                .map(item -> {
-//                    if (checkQuantityUpdatePossible(item.getAmount(),quantity)) {
-//                        item.setAmount(item.getAmount() + quantity);
-//                    }
-//                    else throw new InvalidQuantityChangeException(quantity,item.getAmount(),item.getId());
-//                    return repository.save(item);
-//                }).orElseThrow(() -> new ItemNotFoundException(itemId));
 
     }
 
@@ -86,20 +78,7 @@ public class ItemController {
 
     }
 
-//    @PutMapping("/items/{id}")
-//    Item replaceEmployee(@RequestBody Item newEmployee, @PathVariable Long id) {
-//
-//        return repository.findById(id)
-//                .map(employee -> {
-//                    employee.setName(newEmployee.getName());
-//                    employee.setRole(newEmployee.getRole());
-//                    return repository.save(employee);
-//                })
-//                .orElseGet(() -> {
-//                    newEmployee.setId(id);
-//                    return repository.save(newEmployee);
-//                });
-//    }
+
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete Item by ID")
