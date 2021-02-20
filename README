@@ -1,0 +1,9 @@
+This project implements basic crud operation of an "inventory" application using spring boot, maven, jpa, and is deployed using docker.
+
+#SIMPLE DOCKER BUILD
+1: type -  docker build .
+2: Get containerid
+3: type - docker run -it -p8080:8080 containerid
+4: the api should be accessible from the localhost:8080 port
+5: goto localhost:8080/items/main for some gui
+6: goto localhost:8080/swagger-ui.html#/
