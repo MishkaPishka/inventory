@@ -2,10 +2,11 @@
 FROM maven:3.6.3-jdk-8
 
 # copy the source tree and the pom.xml to our new container
-COPY ./ ./
+# COPY ./ ./
+COPY /target/spring-boot-docker-0.0.1-SNAPSHOT.jar test-project.jar
 
-# package our application code
-RUN mvn clean package
+# # package our application code
+# RUN mvn clean package
 
 # set the startup command to execute the jar
-CMD ["java", "-jar", "target/spring-boot-docker-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "test-project.jar"]
