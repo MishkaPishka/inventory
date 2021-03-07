@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type='text/javascript' src="inventoryAPIRequests.js"></script>
+
+    <!--    <script type='text/javascript' src="/static/jquery.min.js"></script>&lt;!&ndash; see the change here &ndash;&gt;-->
+</head>
+<body>
+<h1 id="a">dfdddddddddddddSPRING BOOT + SWAGGER UI + JPA + DOCKER - INTRO PROJECT</h1>
+<p>
+    This project implements crud operation on a db of an "inventory".
+    <a href="http://localhost:8080/swagger-ui.html#/">Click here</a> to get to the swagger ui of the api
+</p>
+<button id="bbb" onclick="g()">Click</button>
+</body>
+
+<script>
+    var scripts = document.getElementsByTagName("script"),
+        src = scripts[scripts.length-1].src;
+    console.log(scripts)
+
+
+
+    function g() {
+        f()
+            .then((val)=>{
+                console.log("follow vale -",val);
+                console.log( document.getElementById('a'));
+                console.log( val['name']);
+                console.log( val['inventoryCode']);
+                console.log( val['amount']);
+                console.log( val['id']);
+
+                document.getElementById('bbb').innerText = JSON.stringify(val)
+            })
+    }
+</script>
+</html>

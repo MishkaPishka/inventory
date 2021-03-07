@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <script type='text/javascript' src="../constants.js"></script>
+
+    <script type='text/javascript' src="../inventoryAPIRequests.js"></script>
+    <script type='text/javascript' src="../renderer.js"></script>
+    <script type='text/javascript' src="../eventsParser.js"></script>
+</head>
+<body>
+    <h1  id="aa" th:text="'Item Page: '+ ${item.name}"> </h1>
+    <h2 th:text="'Quantity: '+ ${item.quantity}"></h2>    <input   id='quantityInput' style='display:inline-block' class="form-control" type="number" value="0" th:attr="min=-${item.quantity}">
+
+    <h2 th:text="'Inventory Code: '+ ${item.inventoryCode}"></h2>
+    <button id="editButton" onclick="hideEditDisplaySaveAndClose()">Edit</button>
+    <button id="saveButton">Save</button>
+    <button id="cancelButton" onclick="hideSaveAndCloseDisplayEdit()">Cancel</button>
+
+    <button id="setItemImage">Set Image</button>
+</body>
+
+<script th:inline="javascript">
+    // let number = JSON.stringify([[${itemsList}]]);
+    // let number = JSON.parse('[[${itemsList}]]');
+    //
+    // let x = ${itemsList} +'' ;
+    // var number = JSON.parse([[${itemsList}]]);
+    /*<![CDATA[*/
+    var myval = /*[[${item}]]*/ [];
+    var name = myval['name']
+    var inventoryCode = myval['inventoryCode']
+    var quantity = myval['quantity']
+    var id = myval['id']
+
+    function hideEditDisplaySaveAndClose() {
+        $("#editButton").hide();
+        $("#cancelButton").show();
+        $("#saveButton").show();
+        $("#quantityInput").show();
+
+
+    }
+    function hideSaveAndCloseDisplayEdit() {
+        $("#editButton").show();
+        $("#cancelButton").hide();
+        $("#saveButton").hide();
+        $("#quantityInput").hide();
+
+
+    }
+
+    $(document).ready(function() {
+        $('#cancelButton').hide();
+        $('#saveButton').hide();
+        $("#quantityInput").hide();
+
+    })
+
+
+    function clickSaveButtonOnEditItemView(itemId,fieldsMap) {
+        //get fields
+        //server call
+        //update state
+    }
+
+    function updateItemRequest(itemId,fieldsMap) {
+
+    }
+</script>
+</html>

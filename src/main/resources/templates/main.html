@@ -2,51 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta xmlns:th="http://www.thymeleaf.org">
     <title>Title</title>
     <script type='text/javascript' src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<!--    <script type='text/javascript' src="/static/jquery.min.js"></script>&lt;!&ndash; see the change here &ndash;&gt;-->
+    <script type='text/javascript' src="constants.js"></script>
+
+    <script type='text/javascript' src="inventoryAPIRequests.js"></script>
+    <script type='text/javascript' src="renderer.js"></script>
+    <script type='text/javascript' src="eventsParser.js"></script>
+    <script type='text/javascript' src="modalEvents.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/css/modals.css" media="screen"/>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script th:inline="javascript">
+        // let number = JSON.stringify([[${itemsList}]]);
+        // let number = JSON.parse('[[${itemsList}]]');
+        //
+        // let x = ${itemsList} +'' ;
+        // var number = JSON.parse([[${itemsList}]]);
+        /*<![CDATA[*/
+            var myval = /*[[${itemsList}]]*/ [];
+
+        /*]]> */
+
+
+
+        // let number = JSON.parse('[[${itemsList}]]');
+        // let number = '${itemsList}';
+
+        // let x ;
+        // $.get('/api/view-inventory/')
+        //     .done(data=>{
+        //         console.log("follow sector request -",data);
+        //         x = data;
+        //     }).fail(err => {
+        //     console.log("follow sector request error-",err);
+        //     x = err;
+        //     console.log('x;',x);
+        // })
+
+    </script>
+    <!--    <script type='text/javascript' src="/static/jquery.min.js"></script>&lt;!&ndash; see the change here &ndash;&gt;-->
 </head>
 <body>
-    <h1 id="a">SPRING BOOT + SWAGGER UI + JPA + DOCKER - INTRO PROJECT</h1>
-    <p>
-        This project implements crud operation on a db of an "inventory".
-        <a href="http://localhost:8080/swagger-ui.html#/">Click here</a> to get to the swagger ui of the api
-    </p>
-<button id="bbb" onclick="g()">Click</button>
+<!--    <h1 id="a">SPRING BOOT + SWAGGER UI + JPA + DOCKER - INTRO PROJECT</h1>-->
+<!--    <p>-->
+<!--        vThis project implements crud operation on a db of an "inventory".-->
+<!--        <a href="http://localhost:8080/swagger-ui.html#/">Click here</a> to get to the swagger ui of the api-->
+<!--    </p>-->
+<!--<button id="bbb" onclick="g()">Click</button>-->
+
+
+    <div class="container p-3 my-3 bg-primary text-white">
+        <h1>Inventory UI Page</h1>
+        <p>This webpage implements the UI part of an inventory crud operation project that uses - spring boot as backend</p>
+        <p>Spring boot related technologies - Maven,thymeleaf,docker,swagger ui,jpa,h2 db, mvc</p>
+        </div>
+    <div class="container">
+        <h2>Inventory Table</h2>
+        <p>Type Search</p>
+        <input class="form-control" id="myInput" type="text" placeholder="Search..">
+        <br>
+        <table id="myTable" class="table table-bordered">
+            <caption>Inventory Items Table <button id="refreshButton">Refresh</button></caption>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>NAME</th>
+                <th>INVENTORY CODE</th>
+                <th>QUANTITY</th>
+
+            </tr>
+            </thead>
+            <tbody >
+
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container">
+        <button id="addItemButton" onclick="openAddItemForm()">Add Item</button>
+        <button id = "removeItemButton" onclick="openRemoveItemForm()">Remove Item</button>
+<!--        <h1 th:text="${itemsList}"></h1>-->
+    </div>
+
+
+
+<div class="form-popup" id="myForm">
+    <form  id='addItemFormID'class="form-container">
+        <h1>Add New Item</h1>
+        <p id="formErrorMessage"></p>
+        <label ><b>Name</b></label>
+        <input  id="nameInputAddItem" type="text" placeholder="Enter Name" name="name" required>
+
+        <label ><b>Inventory Code</b></label>
+        <input  id="inventoryIDInputAddItem" type="text" placeholder="Inventory code" name="inventoryCode" required>
+
+        <label> <b>Quantity</b></label>
+        <input id="quantityInputAddItem" type="text" placeholder="quantity" name="quantity" required>
+<!--        type="submit"-->
+        <button  type="button" class="btn" onclick="submitNewItemViaForm('formErrorMessage')" >Save</button>
+        <button type="button" class="btn cancel" onclick="closeAddItemForm()">Close</button>
+    </form>
+</div>
+
+
+<div class="form-popup" id="removeItemForm">
+    <form  class="form-container">
+        <h1>Remove Item</h1>
+        <p id="removeItemformErrorMessage"></p>
+
+        <label ><b>ID</b></label>
+        <input type="text"  id="idInputRemoveItemForm" placeholder="Enter ID" name="id" required>
+
+        <label ><b>Name</b></label>
+        <input type="text" placeholder="Name" id="NameInputRemoveItemForm" name="name" required>
+
+        <button  type="button" class="btn" onclick="submitRemoveItem('removeItemformErrorMessage')">Remove</button>
+        <button type="button" class="btn cancel" onclick="closeRemoveItemForm()">Close</button>
+    </form>
+</div>
 </body>
 
 <script>
     var scripts = document.getElementsByTagName("script"),
         src = scripts[scripts.length-1].src;
     console.log(scripts)
+    $(document).ready( function () {
+        addRowsToTable('myTable',tableColumns,myval);
 
-    function f() {
-        return new Promise ( (resolve, reject) => {
+    })
 
-            $.get('/items/'+1)
-                .done(data=>{
-                    console.log("follow sector request -",data);
-                    return resolve(data);
-                }).fail(err => {
-                console.log("follow sector request error-",err);
-                return reject(err);
 
-            })
-        })
-    }
+    // function g() {
+    //     f()
+    //     .then((val)=>{
+    //         console.log("follow vale -",val);
+    //         console.log( document.getElementById('a'));
+    //         console.log( val['name']);
+    //         console.log( val['inventoryCode']);
+    //         console.log( val['amount']);
+    //         console.log( val['id']);
+    //
+    //         document.getElementById('bbb').innerText = JSON.stringify(val)
+    //     })
+    //     .catch((err) => {
+    //         console.log( 'error',err);
+    //
+    //     })
+    // }
+        $(document).ready(function(){
+            //REFRESH BUTTON
+            closeAddItemForm();
+            $('#refreshButton').on('click', function () {                 clickRefreshButtonMainTable()      })
 
-    function g() {
-        f()
-        .then((val)=>{
-            console.log("follow vale -",val);
-            console.log( document.getElementById('a'));
-            console.log( val['name']);
-            console.log( val['inventoryCode']);
-            console.log( val['amount']);
-            console.log( val['id']);
 
-            document.getElementById('bbb').innerText = JSON.stringify(val)
-        })
-    }
+            //AUTO COMPLETE
+            $("#myInput").on("keyup", function() {
+                var value = $(this).val().toLowerCase();
+                $("#myTable tr").filter(function() {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+
+
 </script>
 </html>

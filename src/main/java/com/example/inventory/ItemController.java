@@ -3,18 +3,19 @@ package com.example.inventory;
 import java.util.List;
 
 
-import com.example.inventory.errors.InvalidQuantityChangeException;
-import com.example.inventory.errors.ItemNotFoundException;
+import com.example.inventory.exceptions.InvalidQuantityChangeException;
+import com.example.inventory.exceptions.ItemNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 @RestController
 //@Controller
-@RequestMapping("/items")
-@Api(value = "ItemController", description = "Shows inventory")
+@RequestMapping("/api")
+@Api(value = "Items Controller")
 public class ItemController {
 
 //    private final ItemRepository repository;
@@ -26,67 +27,65 @@ public class ItemController {
     @Autowired
     private InventoryService inventoryService;
 
-    //list of all item
-    //get item details
-    //withdrawal quantity
-    //deposit quantity
-    //add item
-    //delete item
 
 
-    // Aggregate root
-    // tag::get-aggregate-root[]
-    @GetMapping("/main")
-    public ModelAndView getHomepage() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("main");
-        return modelAndView;
-    }
-
-
-    @GetMapping("")
-    @ApiOperation(value="Get Item List")
+    @GetMapping("get-inventory-list")
+    @ApiOperation(value="Get Items List")
     List<Item> all() {
         return inventoryService.all();
     }
-    // end::get-aggregate-root[]
 
     @PostMapping("/change-quantity")
     @ApiOperation(value = "Change Quantity of an Item")
     Item changeQuantity(@RequestParam long itemId, @RequestParam int quantity) throws InvalidQuantityChangeException {
         return inventoryService.changeQuantity(itemId,quantity);
-        //TODO
 
     }
 
 
+    @GetMapping("/get-item-by-name/{name}")
+    @ApiOperation(value = "Get Item by Name")
+    Item getItemByName(@PathVariable String name) {
+        Item t =  inventoryService.getItemByName(name);
+        if (t==null)     throw new ItemNotFoundException("name:"+name);
+        return t;
+    }
 
-    @PostMapping("")
+
+
+    @PostMapping("/add")
     @ApiOperation(value = "Add New Item")
-
     Item addNewItem(@RequestBody Item newItem) {
-        //TODO
+
         return inventoryService.addNewItem(newItem);
-
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/items/{id}")
     @ApiOperation(value = "Get Item by ID")
-
-    Item getItem(@PathVariable Long id) throws ItemNotFoundException {
-        return inventoryService.getItem(id);
+    Item getItem(@PathVariable Long id)  {
+        return  inventoryService.getItem(id);
 
     }
+
 
 
 
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete Item by ID")
+    void deleteItem(@PathVariable String id) {
+        long id_ = new Long(id);
 
-    void deleteItem(@PathVariable  Long id) {
-         inventoryService.deleteItem(id);
+         inventoryService.deleteItem(id_);
+
 
     }
 
-
+//        @DeleteMapping("/delete/{id}")
+//    @ApiOperation(value = "Delete Item by ID")
+//        boolean deleteItem(    @PathVariable String id) {
+//        long id_ = Long.parseLong(id);
+//        return inventoryService.deleteItem(id_);
+//
+//
+//    }
 }
