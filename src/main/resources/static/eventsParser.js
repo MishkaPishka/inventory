@@ -38,3 +38,10 @@ function getItemDetailsFromRemoveItemForm() {
 
 }
 
+function updateItemFromItemPage() {
+    let quantityDelta = $("#quantityInput").val();
+    let name =  $("#nameInputInItemPage").val();
+    let inventoryCode =  $("#inventoryCodeInputFieldUpdateItem").val();
+    let map = {name:name,inventoryCode:inventoryCode,quantity:quantityDelta};
+    return map
+}

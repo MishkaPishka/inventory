@@ -4,12 +4,15 @@ import com.example.inventory.exceptions.InvalidCreatingException;
 import com.example.inventory.exceptions.InvalidQuantityChangeException;
 import com.example.inventory.exceptions.ItemExistsException;
 import com.example.inventory.exceptions.ItemNotFoundException;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -95,6 +98,37 @@ public class InventoryService {
 
     public Item getItemByName(String name) {
         return repository.getItemByName(name);
+    }
+
+    public Item changeItemFeildsByMap(long itemId, Map<String, Object> allRequestParams) throws RuntimeException, ConstraintViolationException {
+        int quantityDelta = Integer.parseInt((String)(allRequestParams.get("quantity")));
+        String name = (String)allRequestParams.get("name");
+        int inventoryCode = Integer.parseInt((String)allRequestParams.get("inventoryCode"));
+//        Optional<Item> item =;
+        return  repository.findById(itemId).map( x -> {
+            x.setInventoryCode(inventoryCode);
+            x.setName(name);
+            if (checkQuantityUpdatePossible(x.getQuantity(),quantityDelta))   x.updateQuantity(quantityDelta);
+            else {
+                throw new InvalidQuantityChangeException(x.getQuantity(),quantityDelta,itemId);
+            }
+            try {
+                return  repository.save(x);
+
+            }
+            catch(Exception e) {
+                throw new ItemExistsException("Im with name:"+name +" Exists");
+            }
+
+
+        }  ).orElseThrow(() -> new ItemNotFoundException(Long.toString(itemId)) );
+
+        
+                
+              
+  
+
+
     }
 
 //    public boolean delete(Long id) {

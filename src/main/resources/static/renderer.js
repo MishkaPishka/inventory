@@ -52,3 +52,12 @@ function clearDataFromAddItemForm() {
     // let quantity = $('#quantityInputAddItem').val("");
     // let inventoryCode = $('#inventoryIDInputAddItem').val("");
 }
+
+function renderItemInItemPage(item) {
+    // inventoryCode quantity name
+    $("#quantity").text("Quantity: "+item['quantity'])
+    $("#inventoryCode").text("Inventory Code: "+item['inventoryCode'])
+
+    $("#name").text("Item Page: "+item['name'])
+
+}

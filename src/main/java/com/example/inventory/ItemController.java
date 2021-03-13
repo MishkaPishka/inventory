@@ -1,6 +1,8 @@
 package com.example.inventory;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 
 import com.example.inventory.exceptions.InvalidQuantityChangeException;
@@ -28,6 +30,15 @@ public class ItemController {
     private InventoryService inventoryService;
 
 
+
+
+    @PostMapping("/bulk-update")
+    @ApiOperation(value = "Bulk change of an Item")
+    Item updateItemFields(@RequestParam long itemId, @RequestParam Map<String,String> allRequestParams ) throws InvalidQuantityChangeException, SQLException {
+        JSONObject js = new JSONObject(allRequestParams.get("allRequestParams"));
+        Item x = inventoryService.changeItemFeildsByMap(itemId,js.toMap());
+        return x;
+    }
 
     @GetMapping("get-inventory-list")
     @ApiOperation(value="Get Items List")
@@ -70,6 +81,8 @@ public class ItemController {
 
 
 
+
+
     @DeleteMapping("/delete/{id}")
     @ApiOperation(value = "Delete Item by ID")
     void deleteItem(@PathVariable String id) {
@@ -79,6 +92,8 @@ public class ItemController {
 
 
     }
+
+
 
 //        @DeleteMapping("/delete/{id}")
 //    @ApiOperation(value = "Delete Item by ID")

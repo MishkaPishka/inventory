@@ -27,20 +27,20 @@ function getAllItemsRequest() {
 }
 
 
-function updateItem(itemId,quantity) {
+function updateItemRequest(itemId,map) {
     return new Promise ( (resolve, reject) => {
-        $.get('/api/change-quantity',
+        $.post('/api/bulk-update',
             {
-                itemId: itemId,
-                quantity: quantity
+                allRequestParams:JSON.stringify(map),
+                itemId:itemId
             }
                )
             .done(data=>{
-                console.log("/api/change-quantity -",data);
+                console.log("/api/bulkupdate -",data);
                 return resolve(data);
             }).fail(err => {
-            console.log("/api/change-quantity-",err);
-            return reject(err);
+            console.log("/api/bulkupdate-",err);
+            return reject(err.responseJSON);
 
         })
     })
@@ -94,6 +94,29 @@ function removeItemApiRequest(item) {
 
 
 
+}
+
+function getImageApiRequest(itemId) {
+    return new Promise ( (resolve, reject) => {
+
+
+
+        $.ajax({
+            type: "GET",
+            contentType: "application/json",
+            url: window.location + "/image",
+
+            // dataType: 'json',
+        }).done(function( msg ) {
+            return resolve(msg);
+        })
+            .fail(function (val) {
+                return reject(val);
+
+            })
+
+
+    })
 }
 
 // function removeItemApiRequest(item) {

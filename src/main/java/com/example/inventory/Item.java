@@ -78,6 +78,9 @@ public class Item {
         return this.id.equals(item.id) && this.inventoryCode == (item.inventoryCode) && this.name.equals(item.name) && this.quantity == item.quantity;
     }
 
+    public void updateQuantity(int delta) {
+        this.quantity += delta ;
+    }
     @Override
     public int hashCode() {
         return Objects.hash(this.id, this.inventoryCode, this.name, this.quantity);

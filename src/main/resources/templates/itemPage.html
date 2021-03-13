@@ -12,15 +12,38 @@
     <script type='text/javascript' src="../eventsParser.js"></script>
 </head>
 <body>
-    <h1  id="aa" th:text="'Item Page: '+ ${item.name}"> </h1>
-    <h2 th:text="'Quantity: '+ ${item.quantity}"></h2>    <input   id='quantityInput' style='display:inline-block' class="form-control" type="number" value="0" th:attr="min=-${item.quantity}">
 
-    <h2 th:text="'Inventory Code: '+ ${item.inventoryCode}"></h2>
+    <div>
+        <h1  id="name" th:text="'Item Page: '+ ${item.name}"> </h1>
+        <input   id='nameInputInItemPage' style='display:inline-block' class="form-control" th:attr="value=${item.name}"/>
+
+    </div>
+    <div>
+        <h2 id="quantity" th:text="'Quantity: '+ ${item.quantity}"></h2>
+        <input   id='quantityInput' style='display:inline-block' class="form-control" type="number" value="0" th:attr="min=-${item.quantity}"/>
+    </div>
+
+    <div>
+        <h2  id="inventoryCode" th:text="'Inventory Code: '+ ${item.inventoryCode}"></h2>
+        <input    class="form-control" type="number" id='inventoryCodeInputFieldUpdateItem' th:attr="value=${item.inventoryCode}"/>
+
+    </div>
+
     <button id="editButton" onclick="hideEditDisplaySaveAndClose()">Edit</button>
-    <button id="saveButton">Save</button>
+    <button id="saveButton" >Save</button>
     <button id="cancelButton" onclick="hideSaveAndCloseDisplayEdit()">Cancel</button>
+    <div>
+        <h3 id="setItemImage">Set Image</h3>
+        <form id ='formRout' method = "post" enctype="multipart/form-data" action="/item/uplodadImage/" target="myiframe">
+            <input type="file" name = "imageFile" onchange='readURL(this);' />
+            <input type="submit" value="upload"/>
+        </form>
+        <iframe style="display:none;" name="myiframe" src=""></iframe>
+        <img id="itemImage" style="height:200px;width:100px;" th:src="'data:image/png;base64,'+${img}" lt="Item Photo"/>
+    </div>
+    <p id="formErrorMessage"></p>
 
-    <button id="setItemImage">Set Image</button>
+<!--    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg==" alt="Red dot">-->
 </body>
 
 <script th:inline="javascript">
@@ -35,12 +58,23 @@
     var inventoryCode = myval['inventoryCode']
     var quantity = myval['quantity']
     var id = myval['id']
+    var img_reisha = 'data:image/png;base64,'
 
+    var img = /*[[${img}]]*/ "";
+    console.log('XXX',img);
+    console.log('myval',myval);
+
+    $(function() {
+        $("#formRout").attr ("action", "/item/uplodadImage/"+id);
+    })
     function hideEditDisplaySaveAndClose() {
         $("#editButton").hide();
         $("#cancelButton").show();
         $("#saveButton").show();
         $("#quantityInput").show();
+        $("#inventoryCodeInputFieldUpdateItem").show();
+        $("#nameInputInItemPage").show();
+
 
 
     }
@@ -49,6 +83,10 @@
         $("#cancelButton").hide();
         $("#saveButton").hide();
         $("#quantityInput").hide();
+        $("#inventoryCodeInputFieldUpdateItem").hide();
+        $("#nameInputInItemPage").hide();
+
+
 
 
     }
@@ -57,9 +95,28 @@
         $('#cancelButton').hide();
         $('#saveButton').hide();
         $("#quantityInput").hide();
+        $("#inventoryCodeInputFieldUpdateItem").hide();
+        $("#nameInputInItemPage").hide();
+
+        renderImage(1);
+        $("#saveButton").click(function() {
+            updateItem();
+        })
 
     })
 
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#itemImage')
+                    .attr('src', e.target.result);
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
 
     function clickSaveButtonOnEditItemView(itemId,fieldsMap) {
         //get fields
@@ -67,8 +124,49 @@
         //update state
     }
 
-    function updateItemRequest(itemId,fieldsMap) {
+
+
+    function getImage(itemID) {
+        getImageApiRequest(itemID)
+        .then(data => {
+            console.log('image data:',data)
+            return data;
+        })
+        .catch(err=> {
+            console.log(err)})
+        return null;
 
     }
+
+    function renderImage(itemID) {
+
+        // let bytes = getImage(itemID)
+        // console.log('reply from getImage:',bytes)
+        // $("#itemImage").attr("src","\"data:image/png;base64, ["+bytes+"]\"");
+
+
+    }
+
+    function updateItem() {
+        //parse/
+        let data = updateItemFromItemPage();
+
+        //make request
+        updateItemRequest(id,data)
+            .then((res)=> {
+                console.log('xxxx',res);
+                renderItemInItemPage(res);
+                hideSaveAndCloseDisplayEdit();
+                // window.location.reload(false);
+            })
+            .catch((err)=> {
+                console.log(err.message)
+                displayErrorMessage("formErrorMessage",err.message)
+            })
+
+        //update
+
+    }
+
 </script>
 </html>
