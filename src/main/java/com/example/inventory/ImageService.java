@@ -1,13 +1,12 @@
 package com.example.inventory;
 
-import com.sun.org.apache.xml.internal.security.utils.Base64;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.util.Base64;
 import javax.persistence.EntityNotFoundException;
 import java.io.IOException;
-import java.util.Optional;
 import java.util.stream.Stream;
 @Service
 public class ImageService {
@@ -25,7 +24,6 @@ public class ImageService {
         return imageRepository.getImageByItemID(  id );
 
 
-
     }
     public void addImage(Image image)
     {
@@ -37,15 +35,13 @@ public class ImageService {
         return imageRepository.findAll().stream();
     }
 
-    public void createNewImageAndSave(int itemID, byte[] data) {
 
-    }
 
     public void createNewImageFromMultipartFileAndItemIDAndSave(int itemID, MultipartFile imageFile) throws IOException {
 
         String fileType = imageFile.getContentType();
         byte [] data = imageFile.getBytes();
-        String encodedString = Base64.encode(imageFile.getBytes());
+        String encodedString = Base64.getEncoder().encodeToString(imageFile.getBytes());
         System.out.println("encodedString:"+encodedString);
 
         Image im =  imageRepository.getImageByItemID(itemID);

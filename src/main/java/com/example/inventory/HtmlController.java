@@ -1,34 +1,18 @@
 package com.example.inventory;
 
 import com.example.inventory.exceptions.ItemNotFoundException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.json.JSONObject;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.io.File;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
-
-
 import java.io.IOException;
-import java.io.InputStream;
 
 @Controller
 public class HtmlController {
@@ -45,16 +29,6 @@ public class HtmlController {
 
     }
 
-
-//    @GetMapping("error")
-//    @ResponseBody
-//    public ModelAndView errorPage() {
-//        ModelAndView modelAndView = new ModelAndView();
-////         modelAndView.setViewName("errors/error");
-//         modelAndView.setViewName("error");
-//
-//        return modelAndView;
-//    }
 
 
 
@@ -114,9 +88,6 @@ public class HtmlController {
 
 
         try {
-            System.out.println("imageFile:"+imageFile.toString());
-            String encodedString = Base64.encode(imageFile.getBytes());
-            System.out.println("encodedString:"+encodedString);
             imageService.createNewImageFromMultipartFileAndItemIDAndSave(itemID, imageFile);
 
         }

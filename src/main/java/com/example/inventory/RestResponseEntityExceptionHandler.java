@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.Instant;
@@ -19,6 +20,14 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
 
 
 
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    @ResponseStatus(HttpStatus.PAYLOAD_TOO_LARGE)
+
+    public ApiErrorResponse handleFileSizeLimitExceeded(MaxUploadSizeExceededException exc) {
+        Date timestamp = new java.util.Date();
+        return new ApiErrorResponse( HttpStatus.PAYLOAD_TOO_LARGE,exc.getMessage(),timestamp.toInstant());
+
+    }
 
 
         @ExceptionHandler(value
